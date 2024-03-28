@@ -8,6 +8,7 @@ namespace MyECommerce.Infrastructure;
 public class ApplicationContext : IdentityDbContext<ApplicationUser, IdentityRole<long>, long>
 {
     public DbSet<Product> Products { get; set; }
+    public DbSet<Order> Orders { get; set; }
 
     public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
     {
@@ -22,6 +23,7 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser, IdentityRol
         modelBuilder.Entity<IdentityRole<long>>().HasData(
             new {Id = 1L, Name = "Member", NormalizedName = "MEMBER"}, 
             new {Id = 2L, Name = "Administrator", NormalizedName = "ADMINISTRATOR"});
+        modelBuilder.Entity<Order>().Property(b => b.Address).HasColumnType("jsonb");
     }
     
 }

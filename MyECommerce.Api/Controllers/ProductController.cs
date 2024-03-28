@@ -15,6 +15,7 @@ public class ProductController : ControllerBase
     private readonly ApplicationContext _applicationContext;
     private readonly IValidator<CreateProductDto> _validator;
     private readonly ILogger<ProductController> _logger;
+    
 
     public ProductController(ApplicationContext applicationContext, 
         IValidator<CreateProductDto> validator, 
@@ -97,4 +98,5 @@ public class ProductController : ControllerBase
         }
         return Ok(product);
     }
+    
 }
