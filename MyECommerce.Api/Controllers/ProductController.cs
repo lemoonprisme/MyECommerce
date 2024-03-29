@@ -1,9 +1,11 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyECommerce.Api.Dtos;
+using MyECommerce.Application.Commands;
 using MyECommerce.Domain;
 using MyECommerce.Infrastructure;
 
@@ -13,47 +15,40 @@ namespace MyECommerce.Api.Controllers;
 public class ProductController : ControllerBase
 {
     private readonly ApplicationContext _applicationContext;
-    private readonly IValidator<CreateProductDto> _validator;
     private readonly ILogger<ProductController> _logger;
+    private readonly IMediator _mediator;
     
 
     public ProductController(ApplicationContext applicationContext, 
-        IValidator<CreateProductDto> validator, 
-        ILogger<ProductController> logger)
+        ILogger<ProductController> logger, IMediator mediator)
     {
         _applicationContext = applicationContext;
-        _validator = validator;
         _logger = logger;
+        _mediator = mediator;
     }
     
     [Authorize]
     [HttpPost]
-    public async Task<IActionResult> AddProduct([FromBody] CreateProductDto productDto)
+    [ProducesResponseType(typeof(Product),200)]
+    [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails), 400)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> AddProduct([FromBody] CreateProductDto productDto, CancellationToken cancellationToken)
     {
-        var validationResult = await _validator.ValidateAsync(productDto);
-        if (!validationResult.IsValid)
-        {
-            validationResult.AddToModelState(ModelState);
-            return ValidationProblem();
-        } 
-        var product = new Product()
-        {
-            Id = Guid.NewGuid(),
-            Name = productDto.Name,
-            Category = productDto.Category,
-            Status = productDto.Status
-        };
-        _applicationContext.Products.Add(product);
-        await _applicationContext.SaveChangesAsync();
+        var request = new CreateProduct.Request(productDto.Name, productDto.Category, productDto.Status);
+        var product = await _mediator.Send(request, cancellationToken);
         
         return Ok(product);
     }
     
     [AllowAnonymous]
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetProduct(Guid id)
+    [ProducesResponseType(typeof(Product),200)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> GetProduct(Guid id, CancellationToken cancellationToken)
     {
-            var product = await _applicationContext.FindAsync<Product>(id);
+            var request = new GetProduct.Request(id);
+            var product = await _mediator.Send(request, cancellationToken);
             if (product == null)
             {
                 return NotFound();
@@ -63,9 +58,13 @@ public class ProductController : ControllerBase
     
     [Authorize]
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteProduct(Guid id)
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
+    [ProducesResponseType(500)]
+    public async Task<IActionResult> DeleteProduct(Guid id, CancellationToken cancellationToken)
     {
-        var deletedRows = await _applicationContext.Products.Where(s => s.Id == id).ExecuteDeleteAsync();
+        var request = new DeleteProduct.Request(id);
+        var deletedRows = await _mediator.Send(request, cancellationToken);
         if (deletedRows > 0)
             return NoContent();
         return NotFound();
@@ -73,30 +72,13 @@ public class ProductController : ControllerBase
     }
     [Authorize]
     [HttpPut]
+    [ProducesResponseType(typeof(Product),200)]
+    [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails),400)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> PutProduct([FromBody] PutProductDto productDto)
     {
-        var product = new Product()
-        {
-            Id = productDto.Id,
-            Name = productDto.Name,
-            Category = productDto.Category,
-            Status = productDto.Status
-        };
-        try
-        {
-            _applicationContext.Add(product);
-            await _applicationContext.SaveChangesAsync();
-            return Ok(product);
-        }
-        catch (DbUpdateException e)
-        {
-            foreach (var entry in e.Entries)
-            {
-                entry.State = EntityState.Modified;
-            }
-            await _applicationContext.SaveChangesAsync();
-        }
+        var request = new PutProduct.Request(productDto.Id, productDto.Name, productDto.Category, productDto.Status);
+        var product = await _mediator.Send(request);
         return Ok(product);
     }
-    
 }

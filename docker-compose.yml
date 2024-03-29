@@ -1,0 +1,34 @@
+﻿version: "3.9"
+services:
+  seq:
+    image: datalust/seq:latest
+    ports:
+      - "5341:80"
+    environment:
+      ACCEPT_EULA: "Y"
+    restart: unless-stopped
+    volumes:
+      - ./seq-data:/data
+  postgres:
+    container_name: postgres_container2
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "myECommerce"
+      POSTGRES_USER: "MaximTalanov"
+      POSTGRES_PASSWORD: "321321a"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - lisc:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    restart: unless-stopped
+    networks:
+      - postgres
+
+volumes:
+  lisc:
+  pgadmin-data:
+
+networks:
+  postgres:
+    driver: bridge

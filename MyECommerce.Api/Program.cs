@@ -9,7 +9,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MyECommerce.Api.Dtos;
+using MyECommerce.Api.ProblemDetails;
 using MyECommerce.Api.Services;
+using MyECommerce.Application;
+using MyECommerce.Application.Commands;
+using MyECommerce.Application.DependencyInjection;
 using MyECommerce.Domain;
 using MyECommerce.Infrastructure;
 using Serilog;
@@ -83,12 +87,22 @@ builder.Services.AddSwaggerGen(option =>
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<IValidator<CreateProductDto>, CreateProductDtoValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateProduct.Validator>();
 
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterCustomServices();
+});
+builder.Services.AddExceptionHandler<ExceptionHandler>();
 
 var app = builder.Build();
-await app.Services.CreateScope().ServiceProvider.GetRequiredService<ApplicationContext>()
-    .GetInfrastructure().GetRequiredService<IMigrator>().MigrateAsync();
+using (var scope = app.Services.CreateScope())
+{
+    await scope.ServiceProvider.GetRequiredService<ApplicationContext>()
+        .GetInfrastructure().GetRequiredService<IMigrator>().MigrateAsync();
+}
+
+app.UseExceptionHandler(_ => {});
 app.MapControllers();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

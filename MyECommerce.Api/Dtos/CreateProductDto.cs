@@ -11,12 +11,4 @@ public class CreateProductDto
     
 }
 
-public class CreateProductDtoValidator : AbstractValidator<CreateProductDto>
-{
-    public CreateProductDtoValidator()
-    {
-        RuleFor(s => s.Name).Length(0, 50);
-        RuleFor(s => s.Category).Length(0, 20);
-    }
-}
 
