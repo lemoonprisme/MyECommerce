@@ -23,7 +23,7 @@ public class ExceptionHandler : IExceptionHandler
                     { "traceId", Activity.Current?.Id ?? httpContext.TraceIdentifier }
                 }
             }, cancellationToken);
-            
+
             return true;
         }
 

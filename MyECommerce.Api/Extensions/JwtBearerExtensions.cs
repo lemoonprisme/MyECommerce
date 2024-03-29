@@ -25,7 +25,7 @@ public static class JwtBearerExtensions
         };
         return claims;
     }
-    
+
     public static SigningCredentials CreateSigningCredentials(this IConfiguration configuration)
     {
         return new SigningCredentials(
@@ -39,7 +39,7 @@ public static class JwtBearerExtensions
     public static JwtSecurityToken CreateJwtToken(this IEnumerable<Claim> claims, IConfiguration configuration)
     {
         var expire = configuration.GetSection("Jwt:Expire").Get<int>();
-        
+
         return new JwtSecurityToken(
             configuration["Jwt:Issuer"],
             configuration["Jwt:Audience"],
@@ -48,12 +48,12 @@ public static class JwtBearerExtensions
             signingCredentials: configuration.CreateSigningCredentials()
         );
     }
-    
+
     public static JwtSecurityToken CreateToken(this IConfiguration configuration, List<Claim> authClaims)
     {
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!));
         var tokenValidityInMinutes = configuration.GetSection("Jwt:TokenValidityInMinutes").Get<int>();
-        
+
         var token = new JwtSecurityToken(
             issuer: configuration["Jwt:Issuer"],
             audience: configuration["Jwt:Audience"],

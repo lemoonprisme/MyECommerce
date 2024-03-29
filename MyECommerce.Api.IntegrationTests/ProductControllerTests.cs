@@ -22,7 +22,7 @@ public class ProductControllerTests : TestBase
 {
     public ProductControllerTests(AppFactory appFactory) : base(appFactory)
     {
-    }    
+    }
 
     [Fact]
     public async Task Product_GetProduct_ReturnOk()
@@ -39,14 +39,14 @@ public class ProductControllerTests : TestBase
     public async Task Product_PostProduct_ReturnBadRequest()
     {
         //Arrange
-        
+
         var productDto = new CreateProductDto()
         {
             Category = "TooLongStriiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiing",
             Name = "Name",
             Status = Status.Available
         };
-            
+
         //Act
         var response = await HttpClient.PostAsJsonAsync("api/product", productDto);
 
@@ -58,7 +58,7 @@ public class ProductControllerTests : TestBase
     public async Task Product_PostProduct_ReturnOk()
     {
         //Arrange
-        
+
         var productDto = new CreateProductDto()
         {
             Category = "Toy",
@@ -75,7 +75,7 @@ public class ProductControllerTests : TestBase
     public async Task Product_PutExistingProduct_ReturnOk()
     {
         //Arrange
-        
+
         var createProductDto = new CreateProductDto()
         {
             Category = "Toy",
@@ -131,7 +131,7 @@ public class ProductControllerTests : TestBase
     public async Task Product_DeleteProduct_ReturnNotFound()
     {
         //Arrange
-        
+
         //Act
         var response = await HttpClient.DeleteAsync($"api/product/{Guid.NewGuid()}");
         //Assert
@@ -156,5 +156,5 @@ public class ProductControllerTests : TestBase
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
 
-    
+
 }

@@ -2,12 +2,12 @@
 
 namespace MyECommerce.Api.Dtos;
 
-public class RegisterRequest
+public class RegisterRequestDto
 {
-    [Required] 
-    [Display(Name = "Email")] 
+    [Required]
+    [Display(Name = "Email")]
     public string Email { get; set; } = null!;
- 
+
     [Required]
     [Display(Name = "Дата рождения")]
     public DateTime BirthDate { get; set; }
@@ -26,9 +26,9 @@ public class RegisterRequest
     [Required]
     [Display(Name = "Имя")]
     public string FirstName { get; set; } = null!;
-    
+
     [Required]
     [Display(Name = "Фамилия")]
     public string LastName { get; set; } = null!;
-    
+
 }

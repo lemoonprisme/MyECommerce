@@ -20,7 +20,7 @@ public class TokenService : ITokenService
             .CreateClaims(roles)
             .CreateJwtToken(_configuration);
         var tokenHandler = new JwtSecurityTokenHandler();
-        
+
         return tokenHandler.WriteToken(token);
     }
 }

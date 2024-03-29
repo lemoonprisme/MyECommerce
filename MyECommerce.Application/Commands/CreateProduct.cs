@@ -9,7 +9,7 @@ namespace MyECommerce.Application.Commands;
 public static class CreateProduct
 {
     public record Request(string Name, string Category, Status Status) : IRequest<Product>;
-    
+
     public class Validator : AbstractValidator<Request>
     {
         public Validator()
@@ -18,9 +18,9 @@ public static class CreateProduct
             RuleFor(s => s.Category).Length(0, 20);
         }
     }
-    
+
     [UsedImplicitly]
-    public class Handler : IRequestHandler<Request,Product>
+    public class Handler : IRequestHandler<Request, Product>
     {
         private readonly ApplicationContext _applicationContext;
 
@@ -28,10 +28,10 @@ public static class CreateProduct
         {
             _applicationContext = applicationContext;
         }
-        
+
         public async Task<Product> Handle(Request request, CancellationToken cancellationToken)
         {
-            
+
             var product = new Product()
             {
                 Id = Guid.NewGuid(),

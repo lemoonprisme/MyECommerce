@@ -1,6 +1,6 @@
 ﻿namespace MyECommerce.Api.Dtos;
 
-public class AuthResponse
+public class AuthResponseDto
 {
     public string Username { get; set; } = null!;
     public string Email { get; set; } = null!;

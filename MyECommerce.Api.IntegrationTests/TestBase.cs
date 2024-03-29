@@ -8,8 +8,8 @@ namespace MyECommerce.Api.IntegrationTests;
 public class TestBase : IClassFixture<AppFactory>
 {
     protected HttpClient HttpClient { get; }
-    
-    
+
+
     public TestBase(AppFactory appFactory)
     {
         HttpClient = appFactory.CreateClient();
@@ -21,9 +21,9 @@ public class TestBase : IClassFixture<AppFactory>
         };
         var roles = new List<IdentityRole<long>>()
             { new IdentityRole<long>() { Id = 2, Name = "Administrator", NormalizedName = "ADMINISTRATOR" } };
-        var token = appFactory.Services.GetRequiredService<ITokenService>().CreateToken(user, roles); 
+        var token = appFactory.Services.GetRequiredService<ITokenService>().CreateToken(user, roles);
         HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
     }
 
-    
+
 }

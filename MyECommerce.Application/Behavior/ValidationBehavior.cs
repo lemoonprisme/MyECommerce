@@ -23,7 +23,7 @@ public sealed class ValidationBehavior<TRequest, TResponse>
         var context = new ValidationContext<TRequest>(request);
 
         var validationResults = await Task.WhenAll(
-            _validators.Select(validator => validator.ValidateAsync(context,cancellationToken)));
+            _validators.Select(validator => validator.ValidateAsync(context, cancellationToken)));
 
         var errors = validationResults
             .Where(validationResult => !validationResult.IsValid)
@@ -37,5 +37,5 @@ public sealed class ValidationBehavior<TRequest, TResponse>
 
         return response;
     }
-    
+
 }

@@ -17,11 +17,15 @@ public class ApplicationContext : IdentityDbContext<ApplicationUser, IdentityRol
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Product>().HasKey(s => s.Id);
         modelBuilder.Entity<Product>().Property(s => s.Id).ValueGeneratedNever();
+
         modelBuilder.Entity<IdentityRole<long>>().HasData(
             new { Id = 1L, Name = "Member", NormalizedName = "MEMBER" },
             new { Id = 2L, Name = "Administrator", NormalizedName = "ADMINISTRATOR" });
+
         modelBuilder.Entity<Order>().Property(b => b.Address).HasColumnType("jsonb");
+        modelBuilder.Entity<Order>().Property(b => b.Products).HasColumnType("jsonb");
     }
 }

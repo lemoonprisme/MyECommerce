@@ -8,7 +8,6 @@ using MyECommerce.Api.Extensions;
 using MyECommerce.Api.Services;
 using MyECommerce.Domain;
 using MyECommerce.Infrastructure;
-using RegisterRequest = MyECommerce.Api.Dtos.RegisterRequest;
 
 namespace MyECommerce.Api.Controllers;
 
@@ -19,9 +18,9 @@ public class AccountsController : ControllerBase
     private readonly ITokenService _tokenService;
     private readonly IConfiguration _configuration;
 
-    public AccountsController(ITokenService tokenService, 
-        ApplicationContext context, 
-        UserManager<ApplicationUser> userManager, 
+    public AccountsController(ITokenService tokenService,
+        ApplicationContext context,
+        UserManager<ApplicationUser> userManager,
         IConfiguration configuration)
     {
         _tokenService = tokenService;
@@ -31,42 +30,42 @@ public class AccountsController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthRequest request)
+    public async Task<ActionResult<AuthResponseDto>> Authenticate([FromBody] AuthRequestDto requestDto)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        var managedUser = await _userManager.FindByEmailAsync(request.Email);
-        
+        var managedUser = await _userManager.FindByEmailAsync(requestDto.Email);
+
         if (managedUser == null)
         {
             return BadRequest("Bad credentials");
         }
-        
-        var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, request.Password);
-        
+
+        var isPasswordValid = await _userManager.CheckPasswordAsync(managedUser, requestDto.Password);
+
         if (!isPasswordValid)
         {
             return BadRequest("Bad credentials");
         }
-        
-        var user = _context.Users.FirstOrDefault(u => u.Email == request.Email);
-        
+
+        var user = _context.Users.FirstOrDefault(u => u.Email == requestDto.Email);
+
         if (user is null)
             return Unauthorized();
 
         var roleIds = await _context.UserRoles.Where(r => r.UserId == user.Id).Select(x => x.RoleId).ToListAsync();
         var roles = _context.Roles.Where(x => roleIds.Contains(x.Id)).ToList();
-        
+
         var accessToken = _tokenService.CreateToken(user, roles);
         user.RefreshToken = _configuration.GenerateRefreshToken();
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_configuration.GetSection("Jwt:RefreshTokenValidityInDays").Get<int>());
 
         await _context.SaveChangesAsync();
-        
-        return Ok(new AuthResponse
+
+        return Ok(new AuthResponseDto
         {
             Username = user.UserName!,
             Email = user.Email!,
@@ -74,20 +73,20 @@ public class AccountsController : ControllerBase
             RefreshToken = user.RefreshToken
         });
     }
-    
+
     [HttpPost("register")]
-    public async Task<ActionResult<AuthResponse>> Register([FromBody] RegisterRequest request)
+    public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterRequestDto requestDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
-        
+
         var user = new ApplicationUser
         {
-            FirstName = request.FirstName, 
-            LastName = request.LastName,
-            Email = request.Email, 
-            UserName = request.Email
+            FirstName = requestDto.FirstName,
+            LastName = requestDto.LastName,
+            Email = requestDto.Email,
+            UserName = requestDto.Email
         };
-        var result = await _userManager.CreateAsync(user, request.Password);
+        var result = await _userManager.CreateAsync(user, requestDto.Password);
 
         foreach (var error in result.Errors)
         {
@@ -95,20 +94,20 @@ public class AccountsController : ControllerBase
         }
 
         if (!result.Succeeded) return BadRequest(ModelState);
-        
-        var findUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == request.Email);
 
-        if (findUser == null) throw new Exception($"User {request.Email} not found");
+        var findUser = await _context.Users.FirstOrDefaultAsync(x => x.Email == requestDto.Email);
+
+        if (findUser == null) throw new Exception($"User {requestDto.Email} not found");
 
         await _userManager.AddToRoleAsync(findUser, RoleConsts.Member);
-            
-        return await Authenticate(new AuthRequest
+
+        return await Authenticate(new AuthRequestDto
         {
-            Email = request.Email,
-            Password = request.Password
+            Email = requestDto.Email,
+            Password = requestDto.Password
         });
     }
-    
+
     [HttpPost]
     [Route("refresh-token")]
     public async Task<IActionResult> RefreshToken(TokenModel? tokenModel)
@@ -121,12 +120,12 @@ public class AccountsController : ControllerBase
         var accessToken = tokenModel.AccessToken;
         var refreshToken = tokenModel.RefreshToken;
         var principal = _configuration.GetPrincipalFromExpiredToken(accessToken);
-        
+
         if (principal == null)
         {
             return BadRequest("Invalid access token or refresh token");
         }
-        
+
         var username = principal.Identity!.Name;
         var user = await _userManager.FindByNameAsync(username!);
 
@@ -147,7 +146,7 @@ public class AccountsController : ControllerBase
             refreshToken = newRefreshToken
         });
     }
-    
+
     [Authorize]
     [HttpPost]
     [Route("revoke/{username}")]
@@ -161,7 +160,7 @@ public class AccountsController : ControllerBase
 
         return Ok();
     }
-    
+
     [Authorize]
     [HttpPost]
     [Route("revoke-all")]

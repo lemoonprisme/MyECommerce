@@ -10,52 +10,68 @@ using MyECommerce.Domain;
 using MyECommerce.Infrastructure;
 
 namespace MyECommerce.Api.Controllers;
+
 [Route("api/product")]
 [ApiController]
 public class ProductController : ControllerBase
 {
-    private readonly ApplicationContext _applicationContext;
-    private readonly ILogger<ProductController> _logger;
     private readonly IMediator _mediator;
-    
 
-    public ProductController(ApplicationContext applicationContext, 
-        ILogger<ProductController> logger, IMediator mediator)
+
+    public ProductController(IMediator mediator)
     {
-        _applicationContext = applicationContext;
-        _logger = logger;
         _mediator = mediator;
     }
-    
+
+    /// <summary>
+    /// Add a new product
+    /// </summary>
+    /// <param name="productDto"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPost]
-    [ProducesResponseType(typeof(Product),200)]
+    [ProducesResponseType(typeof(Product), 200)]
     [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails), 400)]
     [ProducesResponseType(500)]
-    public async Task<IActionResult> AddProduct([FromBody] CreateProductDto productDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddProduct([FromBody] CreateProductDto productDto,
+        CancellationToken cancellationToken)
     {
         var request = new CreateProduct.Request(productDto.Name, productDto.Category, productDto.Status);
         var product = await _mediator.Send(request, cancellationToken);
-        
+
         return Ok(product);
     }
     
+    /// <summary>
+    /// Get the product by Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [AllowAnonymous]
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(Product),200)]
+    [ProducesResponseType(typeof(Product), 200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
     public async Task<IActionResult> GetProduct(Guid id, CancellationToken cancellationToken)
     {
-            var request = new GetProduct.Request(id);
-            var product = await _mediator.Send(request, cancellationToken);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return Ok(product);
+        var request = new GetProduct.Request(id);
+        var product = await _mediator.Send(request, cancellationToken);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(product);
     }
     
+    /// <summary>
+    /// Delete product with Id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(204)]
@@ -68,12 +84,17 @@ public class ProductController : ControllerBase
         if (deletedRows > 0)
             return NoContent();
         return NotFound();
-
     }
+    
+    /// <summary>
+    /// Adds or updates the product
+    /// </summary>
+    /// <param name="productDto"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpPut]
-    [ProducesResponseType(typeof(Product),200)]
-    [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails),400)]
+    [ProducesResponseType(typeof(Product), 200)]
+    [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails), 400)]
     [ProducesResponseType(500)]
     public async Task<IActionResult> PutProduct([FromBody] PutProductDto productDto)
     {
