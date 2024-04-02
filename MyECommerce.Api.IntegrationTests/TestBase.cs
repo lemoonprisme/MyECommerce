@@ -8,14 +8,8 @@ namespace MyECommerce.Api.IntegrationTests;
 
 public class TestBase : IClassFixture<AppFactory>, IAsyncLifetime
 {
-    protected readonly ApplicationUser User = new()
-    {
-        Id = 2L,
-        UserName = "Admin",
-        Email = "admin@gmail.com",
-        FirstName = "Admin",
-        LastName = "Adminov"
-    };
+    protected ApplicationUser User { get; private set; } = default!;
+
 
     protected HttpClient HttpClient { get; }
     protected IServiceProvider Services { get; }
@@ -24,8 +18,22 @@ public class TestBase : IClassFixture<AppFactory>, IAsyncLifetime
     {
         Services = appFactory.Services;
         HttpClient = appFactory.CreateClient();
+    }
 
-
+    public async Task InitializeAsync()
+    {
+        var user = new ApplicationUser()
+        {
+            UserName = $"Admin_{Guid.NewGuid()}",
+            Email = $"admin{Guid.NewGuid()}@gmail.com",
+            FirstName = "Admin",
+            LastName = "Adminov"
+        };
+        using var scope = Services.CreateScope();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+        var identityResult = await userManager.CreateAsync(user);
+        Assert.True(identityResult.Succeeded, identityResult.ToString());
+        User = user;
         var roles = new List<IdentityRole<long>>()
         {
             new IdentityRole<long>()
@@ -35,17 +43,9 @@ public class TestBase : IClassFixture<AppFactory>, IAsyncLifetime
             new IdentityRole<long>()
                 { Id = 3L, Name = RoleConsts.ViewAllOrders, NormalizedName = RoleConsts.ViewAllOrders.ToUpper() }
         };
-        var token = appFactory.Services.GetRequiredService<ITokenService>().CreateToken(User, roles);
-        HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-    }
 
-    public async Task InitializeAsync()
-    {
-        using var scope = Services.CreateScope();
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-        var user = await userManager.FindByIdAsync(User.Id.ToString());
-        if (user == null)
-            await userManager.CreateAsync(User, "Test-pass123");
+        var token = Services.GetRequiredService<ITokenService>().CreateToken(User, roles);
+        HttpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
     }
 
     public Task DisposeAsync()
