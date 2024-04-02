@@ -105,13 +105,9 @@ builder.Services.AddMediatR(config =>
     config.RegisterCustomServices();
 });
 builder.Services.AddExceptionHandler<ExceptionHandler>();
-
+builder.Services.AddHostedService<MigrationService>();
 var app = builder.Build();
-using (var scope = app.Services.CreateScope())
-{
-    await scope.ServiceProvider.GetRequiredService<ApplicationContext>()
-        .GetInfrastructure().GetRequiredService<IMigrator>().MigrateAsync();
-}
+
 
 app.UseExceptionHandler(_ => { });
 app.MapControllers();
