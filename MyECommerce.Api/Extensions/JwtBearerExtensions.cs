@@ -19,9 +19,10 @@ public static class JwtBearerExtensions
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.UserName!),
-            new(ClaimTypes.Email, user.Email!),
-            new(ClaimTypes.Role, string.Join(" ", roles.Select(x => x.Name))),
+            new(ClaimTypes.Email, user.Email!)
         };
+        claims.AddRange(roles.Where(role => role.Name != null)
+            .Select(role => new Claim(ClaimTypes.Role, role.Name!)));
         return claims;
     }
 
