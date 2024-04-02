@@ -1,16 +1,15 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=108187ee_002De2ad_002D4be1_002D9e7c_002Da2e4f59a2968/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Product_PostProduct_ReturnOk" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.ProductController.Product_PostProduct_ReturnOk&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=7ccf2d7f_002De71c_002D47ae_002Db689_002Daf63587134c6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Product_GetProduct_ReturnOk" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=2cec36b5_002D6bee_002D4ae5_002Dbb25_002D67e5e6c8584c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ProductControllerTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.ProductControllerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=b13abaee_002D0945_002D442a_002D875e_002Dbd79f46d6d3f/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="Product_PostProduct_ReturnOk #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=eabf3316_002D4799_002D436d_002Da17d_002D20dd28683655/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ProductControllerTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.ProductControllerTests.Product_GetProduct_ReturnOk&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.ProductControllerTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.OrderControllerTests.Orders_GetOrder_ReturnOk&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.OrderControllerTests.Orders_PostOrder_BarRequest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.OrderControllerTests.Orders_PostOrder_ReturnOk&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.OrderControllerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

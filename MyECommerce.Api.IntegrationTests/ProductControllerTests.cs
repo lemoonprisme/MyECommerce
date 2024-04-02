@@ -1,20 +1,7 @@
-using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using MyECommerce.Api.Dtos;
-using MyECommerce.Api.Services;
 using MyECommerce.Domain;
-using Newtonsoft.Json;
-using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace MyECommerce.Api.IntegrationTests;
 
@@ -22,17 +9,24 @@ public class ProductControllerTests : TestBase
 {
     public ProductControllerTests(AppFactory appFactory) : base(appFactory)
     {
+        
     }
 
     [Fact]
     public async Task Product_GetProduct_ReturnOk()
     {
-        //Arrange
-
-        //Act
-        var response = await HttpClient.GetAsync($"api/product/4f2c013a-3dc7-4839-87d0-58fe9f9824bf");
-
-        //Assert
+        var productDto = new CreateProductDto()
+        {
+            Category = "Toy",
+            Name = "PopIt",
+            Status = Status.Sold
+        };
+        var postResponse = await HttpClient.PostAsJsonAsync("api/product", productDto);
+        var product = await postResponse.Content.ReadFromJsonAsync<Product>();
+        Assert.NotNull(product);
+        
+        var response = await HttpClient.GetAsync($"api/product/{product.Id.ToString()}");
+        
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
     [Fact]
@@ -118,6 +112,7 @@ public class ProductControllerTests : TestBase
             Status = Status.Sold
         };
         var postResponse = await HttpClient.PostAsJsonAsync("api/product", createProductDto);
+        Assert.Equal(HttpStatusCode.OK, postResponse.StatusCode);
         var product = await postResponse.Content.ReadFromJsonAsync<Product>();
         Assert.NotNull(product);
         //Act

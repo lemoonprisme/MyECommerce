@@ -1,5 +1,4 @@
-﻿using FluentValidation;
-using MyECommerce.Domain;
+﻿using MyECommerce.Domain;
 
 namespace MyECommerce.Api.Dtos;
 

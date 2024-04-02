@@ -18,6 +18,9 @@ public static class CreateOrder
             RuleFor(s => s.Address.State).NotEmpty();
             RuleFor(s => s.Address.Street).NotEmpty();
             RuleFor(s => s.Address.Zip).NotEmpty();
+            RuleFor(s => s.Products.Count).LessThanOrEqualTo(10).GreaterThan(0);
+            RuleForEach(s => s.Products).Must(s => s.Quantity > 0)
+                .WithMessage("Product quantity should be more than 0");
         }
     }
 

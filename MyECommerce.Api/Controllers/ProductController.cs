@@ -1,16 +1,13 @@
-﻿using FluentValidation;
-using FluentValidation.AspNetCore;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MyECommerce.Api.Dtos;
 using MyECommerce.Application.Commands;
 using MyECommerce.Domain;
-using MyECommerce.Infrastructure;
 
 namespace MyECommerce.Api.Controllers;
 
+[Authorize(Policy = "Admins")]
 [Route("api/product")]
 [ApiController]
 public class ProductController : ControllerBase
@@ -29,7 +26,7 @@ public class ProductController : ControllerBase
     /// <param name="productDto"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [Authorize]
+    
     [HttpPost]
     [ProducesResponseType(typeof(Product), 200)]
     [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails), 400)]
@@ -72,7 +69,6 @@ public class ProductController : ControllerBase
     /// <param name="id"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
@@ -91,7 +87,6 @@ public class ProductController : ControllerBase
     /// </summary>
     /// <param name="productDto"></param>
     /// <returns></returns>
-    [Authorize]
     [HttpPut]
     [ProducesResponseType(typeof(Product), 200)]
     [ProducesResponseType(typeof(Microsoft.AspNetCore.Mvc.ProblemDetails), 400)]

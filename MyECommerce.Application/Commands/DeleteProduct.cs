@@ -1,7 +1,6 @@
 ﻿using JetBrains.Annotations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using MyECommerce.Domain;
 using MyECommerce.Infrastructure;
 
 namespace MyECommerce.Application.Commands;

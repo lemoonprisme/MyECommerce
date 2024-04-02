@@ -1,17 +1,13 @@
-﻿using FluentValidation;
-using MyECommerce.Domain;
+﻿using MyECommerce.Domain;
 
 namespace MyECommerce.Api.Dtos;
 
 public class CreateOrderDto
 {
     public Address Address { get; set; }
-
     public List<OrderItemDto> Products { get; set; }
-
-    public long UserId { get; set; }
-
 }
+
 
 public class OrderItemDto
 {

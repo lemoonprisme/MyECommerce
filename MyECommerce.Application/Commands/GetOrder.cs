@@ -6,7 +6,7 @@ using MyECommerce.Infrastructure;
 namespace MyECommerce.Application.Commands;
 public static class GetOrder
 {
-    public record Request(Guid Id) : IRequest<Order?>;
+    public record Request(Guid Id, bool HasAccessToAllOrders) : IRequest<Order?>;
 
     [UsedImplicitly]
     public class Handler : IRequestHandler<Request, Order?>
@@ -20,7 +20,9 @@ public static class GetOrder
 
         public async Task<Order?> Handle(Request request, CancellationToken cancellationToken)
         {
-            return await _applicationContext.FindAsync<Order>([request.Id], cancellationToken);
+            if(request.HasAccessToAllOrders)
+                return await _applicationContext.FindAsync<Order>([request.Id], cancellationToken);
+            return null;
         }
     }
 }

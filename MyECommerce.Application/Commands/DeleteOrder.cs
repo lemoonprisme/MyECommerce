@@ -21,7 +21,7 @@ public static class DeleteOrder
 
         public async Task<int> Handle(Request request, CancellationToken cancellationToken)
         {
-            return await _applicationContext.Products.Where(s => s.Id == request.Id).ExecuteDeleteAsync(cancellationToken);
+            return await _applicationContext.Orders.Where(s => s.Id == request.Id).ExecuteDeleteAsync(cancellationToken);
         }
     }
 }

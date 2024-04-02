@@ -12,7 +12,6 @@ using Microsoft.OpenApi.Models;
 using MyECommerce.Api.Dtos;
 using MyECommerce.Api.ProblemDetails;
 using MyECommerce.Api.Services;
-using MyECommerce.Application;
 using MyECommerce.Application.Commands;
 using MyECommerce.Application.DependencyInjection;
 using MyECommerce.Domain;
@@ -48,21 +47,30 @@ builder.Services.AddAuthentication(opt =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"]!))
         };
     });
-builder.Services.AddAuthorization(options => options.DefaultPolicy =
-    new AuthorizationPolicyBuilder
-            (JwtBearerDefaults.AuthenticationScheme)
-        .RequireAuthenticatedUser()
-        .Build());
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admins", pol =>
+    {
+        pol.AuthenticationSchemes = new List<string>(){JwtBearerDefaults.AuthenticationScheme};
+        pol.RequireRole(RoleConsts.Administrator);
+    });
+    options.DefaultPolicy =
+        new AuthorizationPolicyBuilder
+                (JwtBearerDefaults.AuthenticationScheme)
+            .RequireAuthenticatedUser()
+            .Build();
+});
 builder.Services.AddIdentity<ApplicationUser, IdentityRole<long>>()
     .AddEntityFrameworkStores<ApplicationContext>()
     .AddUserManager<UserManager<ApplicationUser>>()
-    .AddSignInManager<SignInManager<ApplicationUser>>();
+    .AddSignInManager<SignInManager<ApplicationUser>>()
+    .AddRoles<IdentityRole<long>>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
     option.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml"));
-    option.SwaggerDoc("v1", new OpenApiInfo { Title = "Pathnostics", Version = "v1" });
+    option.SwaggerDoc("v1", new OpenApiInfo { Title = "MyECommerce", Version = "v1" });
     option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,

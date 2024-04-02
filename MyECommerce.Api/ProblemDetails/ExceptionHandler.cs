@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Net;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 
