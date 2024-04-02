@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,5 +71,23 @@ public class OrderControllerTests : TestBase, IAsyncLifetime
         var response = await HttpClient.DeleteAsync($"api/order/{Guid.NewGuid()}");
         
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Orders_GetUsersOrders_ReturnOrders()
+    {
+        Order order1 = new OrderBuilder(User.Id).AddProducts(new OrderItem(){ProductId = Guid.NewGuid(), Quantity = 2});
+        Order order2 = new OrderBuilder(User.Id);
+        var orders = new List<Order>() { order1, order2 };
+        
+        using var scope = Services.CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+        dbContext.AddRange(orders);
+        await dbContext.SaveChangesAsync();
+
+        var response = await HttpClient.GetAsync("api/order");
+
+        (await response.Content.ReadFromJsonAsync<List<Order>>())
+            .Should().BeEquivalentTo(orders, options => options.Excluding(o => o.Id));
     }
 }

@@ -4,7 +4,13 @@
     &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.ProductControllerTests&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=eabf3316_002D4799_002D436d_002Da17d_002D20dd28683655/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="ProductControllerTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4883904f_002D8c6e_002D4604_002D999f_002Deb8f08752aa1/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Orders_GetUsersOrders_ReturnOrders" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;And&gt;&#xD;
+    &lt;Namespace&gt;MyECommerce.Api.IntegrationTests&lt;/Namespace&gt;&#xD;
+    &lt;Project Location="C:\Users\t33ma\RiderProjects\MyECommerce\MyECommerce.Api.IntegrationTests" Presentation="&amp;lt;MyECommerce.Api.IntegrationTests&amp;gt;" /&gt;&#xD;
+  &lt;/And&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=eabf3316_002D4799_002D436d_002Da17d_002D20dd28683655/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="ProductControllerTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.ProductControllerTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;xUnit::E0ED7C61-BC48-4DBA-A7B1-A4ED6FC19B84::net8.0::MyECommerce.Api.IntegrationTests.OrderControllerTests.Orders_GetOrder_ReturnOk&lt;/TestId&gt;&#xD;
