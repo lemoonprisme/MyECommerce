@@ -24,7 +24,10 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore
+    - name: Docker Compose Up
+      uses: hoverkraft-tech/compose-action@v1.5.1
+      with:
+        compose-file: "./docker-compose.yml"
     - name: Test
-      run: |
-        docker-compose up -d
+      run:
         dotnet test --no-build --verbosity normal
