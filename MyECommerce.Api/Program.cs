@@ -16,6 +16,7 @@ using MyECommerce.Application.Commands;
 using MyECommerce.Application.DependencyInjection;
 using MyECommerce.Domain;
 using MyECommerce.Infrastructure;
+using MyECommerce.Notifications;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -102,10 +103,15 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateProduct.Validator>();
 
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterCustomServices();
+    config.RegisterCustomApplicationServices();
+    config.RegisterNotificationServices();
 });
 builder.Services.AddExceptionHandler<ExceptionHandler>();
 builder.Services.AddHostedService<MigrationService>();
+
+
+
+
 var app = builder.Build();
 
 

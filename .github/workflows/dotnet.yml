@@ -28,6 +28,7 @@ jobs:
       uses: hoverkraft-tech/compose-action@v1.5.1
       with:
         compose-file: "./docker-compose.yml"
+        up-flags: "--profile ci"
     - name: Test
       run:
         dotnet test --no-build --verbosity normal

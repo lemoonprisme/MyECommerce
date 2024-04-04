@@ -11,6 +11,9 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+        <PackageReference Include="KafkaFlow.LogHandler.Console" Version="3.0.5" />
+        <PackageReference Include="KafkaFlow.Microsoft.DependencyInjection" Version="3.0.5" />
+        <PackageReference Include="KafkaFlow.Serializer.ProtobufNet" Version="3.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.14" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.17" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.17">
@@ -31,6 +34,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MyECommerce.Application\MyECommerce.Application.csproj" />
+      <ProjectReference Include="..\MyECommerce.Notifications\MyECommerce.Notifications.csproj" />
     </ItemGroup>
 
     <ItemGroup>

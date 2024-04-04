@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using MediatR;
 using MyECommerce.Domain;
+using MyECommerce.Domain.Events;
 using MyECommerce.Infrastructure;
 
 namespace MyECommerce.Application.Commands;
@@ -9,7 +10,8 @@ namespace MyECommerce.Application.Commands;
 public static class CreateOrder
 {
     public record Request(Address Address, List<OrderItem> Products, long UserId) : IRequest<Order>;
-
+    
+    [UsedImplicitly]
     public class Validator : AbstractValidator<Request>
     {
         public Validator()
@@ -28,10 +30,12 @@ public static class CreateOrder
     public class Handler : IRequestHandler<Request, Order>
     {
         private readonly ApplicationContext _applicationContext;
+        private readonly IPublisher _publisher;
 
-        public Handler(ApplicationContext applicationContext)
+        public Handler(ApplicationContext applicationContext, IPublisher publisher)
         {
             _applicationContext = applicationContext;
+            _publisher = publisher;
         }
 
         public async Task<Order> Handle(Request request, CancellationToken cancellationToken)
@@ -45,6 +49,7 @@ public static class CreateOrder
             };
             _applicationContext.Add(order);
             await _applicationContext.SaveChangesAsync(cancellationToken);
+            await _publisher.Publish(new OrderCreatedEvent(order.UserId, order.Id, order.Address), cancellationToken);
             return order;
         }
     }
